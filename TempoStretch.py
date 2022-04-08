@@ -4,7 +4,7 @@ import utils
 from DownloadSongs import ParseSongList
 import os
 
-SONG_PATH = "./songs/fullSongs/"
+SONG_PATH = "./songs/previewWavs/"
 JSON_PATH = "./data/songlist_test.json"
 # Read mono wav file
 # y, sr = sf.read("./test.wav")
@@ -22,13 +22,13 @@ if __name__ == "__main__":
     print(songLibrary)
     # walk through fullSongs folder, get song name and then get song link
     for fileName in os.listdir(SONG_PATH):
-        songName = fileName.split(" ")[0]
-        songLink = songLibrary.getSongLink(songName)
-        songPath = SONG_PATH + fileName
-        print(songPath)
-        y, sr = sf.read(songPath)
-        
-        y_stretch = pyrb.time_stretch(y, sr, ratio)
-        outputFilePath = f"./songs/temp/{fileName}"
-        utils.writeAudio(outputFilePath,y_stretch,sr)
+        if not fileName.startswith('.') and os.path.isfile(os.path.join(SONG_PATH, fileName)):
+            songName = fileName.split(" ")[0]
+            songLink = songLibrary.getSongLink(songName)
+            songPath = SONG_PATH + fileName
+            print(songPath)
+            y, sr = sf.read(songPath) 
+            y_stretch = pyrb.time_stretch(y, sr, ratio)
+            outputFilePath = f"./songs/temp/{fileName}"
+            utils.writeAudio(outputFilePath,y_stretch,sr)
         
